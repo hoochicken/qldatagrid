@@ -1,6 +1,6 @@
 {
-  "name": "hoochicken/ql-data-grid",
-  "description": "ql data grid",
+  "name": "hoochicken/datagrid",
+  "description": "datagrid",
   "license": "MIT",
   "authors": [
     {
@@ -14,7 +14,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Hoochicken\\QlDataGrid\\": "src"
+      "Hoochicken\\Datagrid\\": "src"
     }
   }
 }
