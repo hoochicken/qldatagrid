@@ -1,0 +1,8 @@
+<?php
+
+namespace Hoochicken\Datagrid;
+
+class Datagrid
+{
+
+}
