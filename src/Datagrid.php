@@ -9,7 +9,7 @@ class Datagrid
     private array $rows = [];
     private string $tableClass = '';
 
-    const TABLE = '<table class="{table_class}">{thead}{tbody}</thead>';
+    const TABLE = '<table class="{table_class}">{thead}{tbody}</table>';
     const THEAD = '<thead>{content}</thead>';
     const TBODY = '<tbody>{content}</tbody>';
     const TR = '<tr>{content}</tr>';
