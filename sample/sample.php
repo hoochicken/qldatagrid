@@ -11,4 +11,4 @@ $data = [
 ];
 $datagridtable = new Datagrid();
 
-echo $datagridtable->getTable($data);
+echo $datagridtable->getTable($data, $columns);

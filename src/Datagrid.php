@@ -7,10 +7,11 @@ class Datagrid
 
     private array $columns = [];
     private array $rows = [];
+    private string $tableClass = '';
 
-    const TABLE = '<table>{thead}{tbody}</thead>';
-    const THEAD = '<thead><tr>{content}</tr></thead>';
-    const TBODY = '<tbody><tr>{content}</tr></tbody>';
+    const TABLE = '<table class="{table_class}">{thead}{tbody}</thead>';
+    const THEAD = '<thead>{content}</thead>';
+    const TBODY = '<tbody>{content}</tbody>';
     const TR = '<tr>{content}</tr>';
     const TD = '<td>{content}</td>';
     const TH = '<th>{content}</th>';
@@ -22,8 +23,11 @@ class Datagrid
         if (0 === count($columns)) {
             $columns = $this->getDefaultColumns($data[0] ?? []);
         }
+        array_walk($data, function (&$item) use ($columns) {
+            $item = array_intersect_key($item, $columns);
+        });
 
-        $html = self::TABLE;
+        $html = str_replace('{table_class}', $this->getTableCLass(), self::TABLE);
         $html = str_replace('{thead}', $this->getTHead($columns), $html);
         $html = str_replace('{tbody}', $this->getTBody($data), $html);
         return $html;
@@ -40,7 +44,7 @@ class Datagrid
 
     public function getThead(array $columns): string
     {
-        return $this->getTr($columns, true);
+        return str_replace('{content}', $this->getTr($columns, true), self::THEAD);
     }
 
     public function getTBody(array $data): string
@@ -64,10 +68,20 @@ class Datagrid
         foreach ($row as $column => $label) {
             $cells[] = $this->getCell($label, $th, $column);
         }
-        return str_replace('{content}', $this->concatTags($cells) ,self::THEAD);
+        return str_replace('{content}', $this->concatTags($cells) ,self::TR);
     }
     public function concatTags(array $tags): string
     {
         return implode("\n", $tags);
+    }
+
+    public function getTableClass(): string
+    {
+        return $this->tableClass;
+    }
+
+    public function setTableClass(string $tableClass)
+    {
+        $this->tableClass = $tableClass;
     }
 }
