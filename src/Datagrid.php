@@ -8,6 +8,7 @@ class Datagrid
     private array $columns = [];
     private array $rows = [];
     private string $tableClass = '';
+    private bool $headerCaps = true;
 
     const TABLE = '<table class="{table_class}">{thead}{tbody}</table>';
     const THEAD = '<thead>{content}</thead>';
@@ -23,6 +24,7 @@ class Datagrid
         if (0 === count($columns)) {
             $columns = $this->getDefaultColumns($data[0] ?? []);
         }
+
         array_walk($data, function (&$item) use ($columns) {
             $item = array_intersect_key($item, $columns);
         });
@@ -44,6 +46,9 @@ class Datagrid
 
     public function getThead(array $columns): string
     {
+        if ($this->headerCaps) {
+            array_walk($columns, function(&$item) { $item = ucwords($item); });
+        }
         return str_replace('{content}', $this->getTr($columns, true), self::THEAD);
     }
 
@@ -75,13 +80,23 @@ class Datagrid
         return implode("\n", $tags);
     }
 
+    public function setTableClass(string $tableClass)
+    {
+        $this->tableClass = $tableClass;
+    }
+
     public function getTableClass(): string
     {
         return $this->tableClass;
     }
 
-    public function setTableClass(string $tableClass)
+    public function setTableHeaderCaps(string $value)
     {
-        $this->tableClass = $tableClass;
+        $this->headerCaps = $value;
+    }
+
+    public function getTableHeaderCaps(): string
+    {
+        return $this->headerCaps;
     }
 }
