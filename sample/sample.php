@@ -1,5 +1,13 @@
 <?php
-require_once '../../../autoload.php';
+$autoload = '../../../autoload.php';
+if (file_exists($autoload)) {
+    require_once $autoload;
+}
+$class = '../src/Datagrid.php';
+if (file_exists($class)) {
+    require_once $class;
+}
+
 use Hoochicken\Datagrid\Datagrid;
 
 $columns = ['id' => 'id', 'title' => 'Title', 'description' => 'Description', 'state' => 'State', ];
