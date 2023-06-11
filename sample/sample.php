@@ -9,6 +9,6 @@ $data = [
     ['id' => '3', 'title' => 'Green', 'description' => 'Well, guess what', 'state' => '0', ],
     ['id' => '4', 'title' => 'WHite', 'description' => 'So, that#s NOT a color!', 'state' => '-1', ],
 ];
-$datagridtable = new Datagrid();
 
+$datagridtable = new Datagrid();
 echo $datagridtable->getTable($data, $columns);
