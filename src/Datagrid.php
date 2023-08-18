@@ -10,12 +10,12 @@ class Datagrid
     private string $tableClass = '';
     private bool $headerCaps = true;
 
-    const TABLE = '<table class="{table_class}">{thead}{tbody}</table>';
-    const THEAD = '<thead>{content}</thead>';
-    const TBODY = '<tbody>{content}</tbody>';
-    const TR = '<tr>{content}</tr>';
-    const TD = '<td>{content}</td>';
-    const TH = '<th>{content}</th>';
+    const HTML_TABLE = '<table class="{table_class}">{thead}{tbody}</table>';
+    const HTML_HTML_THEAD = '<thead>{content}</thead>';
+    const HTML_TBODY = '<tbody>{content}</tbody>';
+    const HTML_TR = '<tr>{content}</tr>';
+    const HTML_TD = '<td class="{class}">{content}</td>';
+    const HTML_TH = '<th class="{class}">{content}</th>';
 
 
     public function getTable(array $data, array $columns = []): string
@@ -29,7 +29,7 @@ class Datagrid
             $item = array_intersect_key($item, $columns);
         });
 
-        $html = str_replace('{table_class}', $this->getTableCLass(), self::TABLE);
+        $html = str_replace('{table_class}', $this->getTableCLass(), static::HTML_TABLE);
         $html = str_replace('{thead}', $this->getTHead($columns), $html);
         $html = str_replace('{tbody}', $this->getTBody($data), $html);
         return $html;
@@ -44,12 +44,12 @@ class Datagrid
         return $columns;
     }
 
-    public function getThead(array $columns): string
+    public function getTHead(array $columns): string
     {
         if ($this->headerCaps) {
             array_walk($columns, function(&$item) { $item = ucwords($item); });
         }
-        return str_replace('{content}', $this->getTr($columns, true), self::THEAD);
+        return str_replace('{content}', $this->getTr($columns, true), static::HTML_HTML_THEAD);
     }
 
     public function getTBody(array $data): string
@@ -58,23 +58,30 @@ class Datagrid
         foreach ($data as $row) {
             $rows[] = $this->getTr($row);
         }
-        return str_replace('{content}', $this->concatTags($rows), self::TBODY);
+        return str_replace('{content}', $this->concatTags($rows), static::HTML_TBODY);
     }
 
     public function getCell($content, bool $th = false, string $class = ''): string
     {
-        $cell = $th ? self::TH : self::TD;
-        return str_replace('{content}', $content ?? '', $cell);
+        $cell = $th ? static::HTML_TH : static::HTML_TD;
+        return str_replace('{content}', $content ?? '', str_replace('{class}', $class, $cell));
     }
 
     public function getTr(array $row, bool $th = false): string
     {
         $cells = [];
         foreach ($row as $column => $label) {
-            $cells[] = $this->getCell($label, $th, $column);
+            $class = strtolower($this->replaceSpecialChars($column));
+            $cells[] = $this->getCell($label, $th, $class);
         }
-        return str_replace('{content}', $this->concatTags($cells) ,self::TR);
+        return str_replace('{content}', $this->concatTags($cells) ,static::HTML_TR);
     }
+
+    public function replaceSpecialChars(string $string = '', string $replacement = '_'): string
+    {
+        return preg_replace('~([^0-9a-zA-Z])~', $replacement, $string);
+    }
+
     public function concatTags(array $tags): string
     {
         return implode("\n", $tags);
